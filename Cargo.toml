@@ -8,3 +8,8 @@ edition = "2018"
 
 [dependencies]
 clap = "2"
+
+# glib = "^0"
+# gio = "^0"
+# gtk = "^0"
+# libc = "*"

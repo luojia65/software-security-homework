@@ -1,17 +1,22 @@
 // use std::collections::HashMap;
 use std::str::Chars;
 use std::iter::Peekable;
+use std::path::Path;
+use std::fs::File;
+use std::io::Read;
+use clap::{Arg, App, SubCommand};
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum Item {
     Number(String),
     Word(String),
-    Symbol(String)
+    Symbol(String),
+    String(String),
 }
 
 pub struct Items<'a> {
-    // define: HashMap<&'a str, &'a str>,
-    // line_begin: bool,
+    // alias: HashMap<&'a str, &'a str>,
+    line_begin: bool,
     char_indices: Peekable<Chars<'a>>,
 }
 
@@ -20,11 +25,33 @@ impl<'a> Iterator for Items<'a> {
 
     fn next(&mut self) -> Option<Self::Item> {
         while let Some(&ch) = self.char_indices.peek() {
-            if ch == ';' || ch == ' ' || ch == '\r' || ch == '\n' {
+            if ch == '\r' || ch == '\n' {
+                self.line_begin = true;
                 self.char_indices.next();
                 continue;
             }
-            if char_is_number(ch) {
+            if ch == ';' || ch == ' ' || ch == '\t' {
+                self.char_indices.next();
+                continue;
+            }
+            if ch == '#' {
+                // todo: #define, #ifdef, #ifndef
+                // println!("{}", self.line_begin);
+            }
+            self.line_begin = false;
+            if ch == '"' { // 字符串
+                let mut ans = String::new();
+                self.char_indices.next(); // 跳过引号
+                while let Some(&ch_nxt) = self.char_indices.peek() {
+                    if ch_nxt == '"' {
+                        self.char_indices.next(); // 跳过引号
+                        break;
+                    }
+                    ans.push(ch_nxt);
+                    self.char_indices.next();
+                }
+                return Some(Item::String(ans))
+            } else if char_is_number(ch) {
                 let mut ans = String::new();
                 while let Some(&ch_nxt) = self.char_indices.peek() {
                     if !char_is_number(ch_nxt) {
@@ -53,9 +80,18 @@ impl<'a> Iterator for Items<'a> {
                     ans.push(ch_nxt);
                     self.char_indices.next();
                 }
+                if ans == "//" { // 注释
+                    while let Some(&ch_nxt) = self.char_indices.peek() {
+                        if ch_nxt == '\n' {
+                            break;
+                        }
+                        self.char_indices.next();
+                    }
+                    continue;
+                }
                 return Some(Item::Symbol(ans))
             } else {
-                panic!("compile error!")
+                panic!("compile error! char: {}", ch);
             }
         }
         // 已经到结束了
@@ -73,25 +109,24 @@ fn char_is_number(a: char) -> bool {
 
 fn char_is_symbol(a: char) -> bool {
     match a {
-        '[' | ']' | '{' | '}' | '(' | ')' | '-' | '+' | '*' | '/' => true,
+        '[' | ']' | '{' | '}' | '(' | ')' | 
+        '-' | '+' | '*' | '/' | ',' | '=' | '<' | '>' => true,
         _ => false,
     }
 }
 
 pub fn items(input: &str) -> Items {
     Items { 
-        char_indices: input.chars().peekable()
+        char_indices: input.chars().peekable(),
+        line_begin: true,
     }
 }
 
-fn main() {
-    let a = "11111 789 [999 ]123";
-    let b = "12345 789 [aaaaa ] 123 456";
-    // for i in items(a) {
-    //     println!("{:?}", i);
-    // }
+fn execute_r2(a: &str, b: &str) {
     let a = items(a).collect::<Vec<_>>();
     let b = items(b).collect::<Vec<_>>();
+
+    // println!("{:?}", a);
 
     // LCS算法第一步，得到子序列索引数组
     let (la, lb) = (a.len(), b.len());
@@ -124,6 +159,7 @@ fn main() {
             break
         }
         if ca == cb {
+            diff += 1;
             sa.next();
             sb.next();
             i -= 1;
@@ -131,7 +167,6 @@ fn main() {
         } else {
             if dp[i*(lb + 1) + j - 1] > dp[(i-1)*(lb + 1) + j] {
                 // println!("B: {:?}", cb);
-                diff += 1;
                 sb.next();
                 j -= 1;
             } else {
@@ -143,5 +178,59 @@ fn main() {
     }
 
     let rate = diff as f32 / a.len() as f32;
-    println!("重复率：{}%", 100.0 * (1.0 - rate));
+    println!("重复率：{}%", 100.0 * rate);
+}
+
+fn main() {
+    let matches = App::new("Software safety homework")
+        .version("1.0")
+        .author("Luo Jia <U201814857>")
+        .subcommand(SubCommand::with_name("r2")
+            .about("compare C code file using LCS algorithm")
+            .version("1.0")
+            .author("Luo Jia <U201814857>")
+            .arg(Arg::with_name("A")
+                .help("Sets the first input file to use")
+                .required(true)
+                .takes_value(true))
+            .arg(Arg::with_name("B")
+                .help("Sets the second input file to use")
+                .required(true)
+                .takes_value(true)))
+        .subcommand(SubCommand::with_name("r3")
+            .about("compare C code file using call graph")
+            .version("1.0")
+            .author("Luo Jia <U201814857>")
+            .arg(Arg::with_name("A")
+                .help("Sets the first input file to use")
+                .required(true)
+                .takes_value(true))
+            .arg(Arg::with_name("B")
+                .help("Sets the second input file to use")
+                .required(true)
+                .takes_value(true)))
+        .get_matches();
+    
+    if let Some(matches) = matches.subcommand_matches("r2") {
+        let file_a = matches.value_of("A").unwrap();
+        let file_b = matches.value_of("B").unwrap();
+        println!("Comparing files: {}, {}", file_a, file_b);
+        
+        let path = Path::new(&file_a);
+        let content_a = if path.is_file() {
+            let mut file = File::open(path).expect("open file");
+            let mut content = String::new();
+            file.read_to_string(&mut content).expect("read file");
+            content
+        } else { panic!("failed to open as file") };
+        let path = Path::new(&file_b);
+        let content_b = if path.is_file() {
+            let mut file = File::open(path).expect("open file");
+            let mut content = String::new();
+            file.read_to_string(&mut content).expect("read file");
+            content
+        } else { panic!("failed to open as file") };
+
+        execute_r2(&content_a, &content_b);
+    }
 }
