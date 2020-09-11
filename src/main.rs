@@ -15,8 +15,8 @@ pub enum Item {
 }
 
 pub struct Items<'a> {
-    // define: HashMap<&'a str, &'a str>,
-    // line_begin: bool,
+    // alias: HashMap<&'a str, &'a str>,
+    line_begin: bool,
     char_indices: Peekable<Chars<'a>>,
 }
 
@@ -25,10 +25,20 @@ impl<'a> Iterator for Items<'a> {
 
     fn next(&mut self) -> Option<Self::Item> {
         while let Some(&ch) = self.char_indices.peek() {
-            if ch == ';' || ch == ' ' || ch == '\r' || ch == '\n' || ch == '\t' {
+            if ch == '\r' || ch == '\n' {
+                self.line_begin = true;
                 self.char_indices.next();
                 continue;
             }
+            if ch == ';' || ch == ' ' || ch == '\t' {
+                self.char_indices.next();
+                continue;
+            }
+            if ch == '#' {
+                // todo: #define, #ifdef, #ifndef
+                // println!("{}", self.line_begin);
+            }
+            self.line_begin = false;
             if ch == '"' { // 字符串
                 let mut ans = String::new();
                 self.char_indices.next(); // 跳过引号
@@ -107,7 +117,8 @@ fn char_is_symbol(a: char) -> bool {
 
 pub fn items(input: &str) -> Items {
     Items { 
-        char_indices: input.chars().peekable()
+        char_indices: input.chars().peekable(),
+        line_begin: true,
     }
 }
 
@@ -185,8 +196,19 @@ fn main() {
             .arg(Arg::with_name("B")
                 .help("Sets the second input file to use")
                 .required(true)
+                .takes_value(true)))
+        .subcommand(SubCommand::with_name("r3")
+            .about("compare C code file using call graph")
+            .version("1.0")
+            .author("Luo Jia <U201814857>")
+            .arg(Arg::with_name("A")
+                .help("Sets the first input file to use")
+                .required(true)
                 .takes_value(true))
-            )
+            .arg(Arg::with_name("B")
+                .help("Sets the second input file to use")
+                .required(true)
+                .takes_value(true)))
         .get_matches();
     
     if let Some(matches) = matches.subcommand_matches("r2") {
