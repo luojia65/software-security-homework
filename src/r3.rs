@@ -81,10 +81,10 @@ impl<'a> Tokens<'a> {
             if ch == ' ' || ch == '\r' || ch == '\n' || ch == '\t' {
                 self.iter.next();
             } else if ch == '/' {
-                dbg!(_cur_idx, ch, &self);
+                // dbg!(_cur_idx, ch, &self);
                 self.iter.next();
                 if let Some(&(_, nxt_ch)) = self.iter.peek() {
-                    println!("nxt_ch={}", nxt_ch);
+                    // println!("nxt_ch={}", nxt_ch);
                     if nxt_ch == '/' { // '//'
                         self.iter.next();
                         while let Some(&(_, ch)) = self.iter.peek() {
