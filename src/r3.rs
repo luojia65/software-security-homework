@@ -121,22 +121,22 @@ fn char_is_symbol(a: char) -> bool {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Type<'a> {
     name: &'a str,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Ident<'a> {
     name: &'a str,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Operator<'a> {
     repr: &'a str,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Expr<'a> {
     content: &'a str,
 }
@@ -243,6 +243,21 @@ impl<'a> Iterator for Functions<'a> {
         };
         Some(Function { ret_type, ident, params, content })
     }
+}
+
+fn called_functions<'a>(expr: Expr<'a>) -> Vec<&'a str> {
+    let mut ans = Vec::new();
+    let mut iter = Tokens {
+        src: expr.content,
+        iter: expr.content.char_indices().peekable()
+    };
+    while let Some((_idx, expr)) = iter.next() {
+        let pk = iter.iter.peek();
+        if let (Token::Word(w), Some((_, '('))) = (expr, pk) {
+            ans.push(w)
+        }
+    }
+    ans
 }
 
 // fn main() {
