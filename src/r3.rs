@@ -1,5 +1,6 @@
 use std::str::CharIndices;
 use std::iter::Peekable;
+use std::collections::{HashSet, HashMap};
 
 #[derive(Debug)]
 pub enum Token<'a> {
@@ -79,6 +80,21 @@ impl<'a> Tokens<'a> {
         while let Some(&(_cur_idx, ch)) = self.iter.peek() { 
             if ch == ' ' || ch == '\r' || ch == '\n' || ch == '\t' {
                 self.iter.next();
+            } else if ch == '/' {
+                dbg!(_cur_idx, ch, &self);
+                self.iter.next();
+                if let Some(&(_, nxt_ch)) = self.iter.peek() {
+                    println!("nxt_ch={}", nxt_ch);
+                    if nxt_ch == '/' { // '//'
+                        self.iter.next();
+                        while let Some(&(_, ch)) = self.iter.peek() {
+                            if ch == '\n' || ch == '\r' {
+                                break;
+                            }
+                            self.iter.next();
+                        }
+                    }
+                }
             } else {
                 break
             }
@@ -131,7 +147,7 @@ pub struct Type<'a> {
     name: &'a str,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct Ident<'a> {
     name: &'a str,
 }
@@ -260,8 +276,8 @@ impl<'a> Iterator for Functions<'a> {
     }
 }
 
-fn called_functions<'a>(expr: Expr<'a>) -> Vec<&'a str> {
-    let mut ans = Vec::new();
+fn called_functions<'a>(expr: Expr<'a>) -> HashSet<&'a str> {
+    let mut ans = HashSet::new();
     let mut iter = Tokens {
         src: expr.content,
         iter: expr.content.char_indices().peekable()
@@ -269,7 +285,7 @@ fn called_functions<'a>(expr: Expr<'a>) -> Vec<&'a str> {
     while let Some((_idx, expr)) = iter.next() {
         let pk = iter.iter.peek();
         if let (Token::Word(w), Some((_, '('))) = (expr, pk) {
-            ans.push(w)
+            ans.insert(w);
         }
     }
     ans
@@ -296,11 +312,31 @@ fn tokens(a: &str) -> Tokens {
 }
 
 pub fn execute_r3(a: &str, b: &str) {
-    let fns = Functions { iter: tokens(a) };
-    for f in fns {
-        println!("{:?}", f);
-        for cf in called_functions(f.content) {
-            println!("Called: {}", cf);
-        }
+    // println!("{:?}", a);
+    // println!("{:?}", b);
+    let mut fa = HashMap::new();
+    let fai = Functions { iter: tokens(a) };
+    for f in fai {
+        fa.insert(f.ident, f);
     }
+    let mut fb = HashMap::new();
+    let fbi = Functions { iter: tokens(b) };
+    for f in fbi {
+        fb.insert(f.ident, f);
+    }
+    // println!("fa={:?}", fa);
+    // println!("fb={:?}", fb);
+    for (ident, func_a) in fa.iter() {
+        let ca = called_functions(func_a.content);
+        // println!("{:?}", ca);
+        if let Some(func_b) = fb.get(&ident) {
+            let cb = called_functions(func_b.content);
+            // println!("{:?}, {:?}", ca, cb);
+            if ca == cb {
+                println!("完全重复！");
+                return;
+            }
+        }
+    } 
+    println!("不完全重复！");
 }
