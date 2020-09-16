@@ -9,6 +9,7 @@ pub enum Token<'a> {
     Symbol(&'a str),
 }
 
+#[derive(Debug)]
 pub struct Tokens<'a> {
     src: &'a str,
     iter: Peekable<CharIndices<'a>>,
@@ -75,8 +76,12 @@ impl<'a> Tokens<'a> {
     }
     
     pub fn skip_blanks(&mut self) {
-        while let Some(&(_cur_idx, ' ')) = self.iter.peek() { 
-            self.iter.next();
+        while let Some(&(_cur_idx, ch)) = self.iter.peek() { 
+            if ch == ' ' || ch == '\r' || ch == '\n' || ch == '\t' {
+                self.iter.next();
+            } else {
+                break
+            }
         }
     }
 }
@@ -158,26 +163,27 @@ impl<'a> Tokens<'a> {
         None
     }
 
-    pub fn next_operator(&mut self) -> Option<(usize, Operator<'a>)> {
-        self.skip_blanks();
-        if let Some((idx, Token::Symbol(s))) = self.next() {
-            match s {
-                "+" | "-" | "*" | "/" | "->" | "," | "=" | "<" | ">" | "<=" | ">=" 
-                    => return Some((idx, Operator { repr: s })),
-                _ => return None,
-            }
-        }
-        None
-    }
+    // pub fn next_operator(&mut self) -> Option<(usize, Operator<'a>)> {
+    //     self.skip_blanks();
+    //     if let Some((idx, Token::Symbol(s))) = self.next() {
+    //         match s {
+    //             "+" | "-" | "*" | "/" | "->" | "," | "=" | "<" | ">" | "<=" | ">=" 
+    //                 => return Some((idx, Operator { repr: s })),
+    //             _ => return None,
+    //         }
+    //     }
+    //     None
+    // }
 
     pub fn next_expr(&mut self) -> Option<(usize, Expr<'a>)> {
         self.skip_blanks();
         let (mut a, mut b, mut c) = (0, 0, 0);
-        let begin = if let Some((_idx, Token::Symbol(s))) = self.next() {
+        let begin = if let Some((idx, Token::Symbol(s))) = self.next() {
             match s {
                 "(" => a += 1,
                 "[" => b += 1,
                 "{" => c += 1,
+                "()" => return Some((idx, Expr { content: "" })),
                 _ => {}
             }
             if let Some(&(idx, _)) = self.iter.peek() {
@@ -188,19 +194,24 @@ impl<'a> Tokens<'a> {
         } else {
             return None;
         };
+        self.skip_blanks();
+        // println!("peek: {:?}", self.iter.peek());
         while let Some((idx, tt)) = self.next() {
+            // println!("{:?} {:?}", idx, tt);
             if let Token::Symbol(s) = tt {
-                match s {
+                match &s[..=0] {
                     "(" => a += 1, ")" => a -= 1,
                     "[" => b += 1, "]" => b -= 1,
                     "{" => c += 1, "}" => c -= 1,
                     _ => {}
                 }
             }
+            // println!("a={} b={}, c={}", a, b, c);
             if a == 0 && b == 0 && c == 0 {
                 self.iter.next();
                 return Some((begin, Expr { content: &self.src[begin..idx] }))
             }
+            self.skip_blanks();
         }
         None
     }
@@ -222,21 +233,25 @@ impl<'a> Iterator for Functions<'a> {
     type Item = Function<'a>;
     fn next(&mut self) -> Option<Self::Item> {
         let ret_type = if let Some((_idx, typ)) = self.iter.next_type() {
+            // println!("type: {:?}", typ);
             typ
         } else {
             return None;
         };
         let ident = if let Some((_idx, ident)) = self.iter.next_ident() {
+            // println!("ident: {:?}", ident);
             ident
         } else {
             return None;
         };
         let params = if let Some((_idx, expr)) = self.iter.next_expr() {
+            // println!("params: {:?}", expr);
             expr
         } else {
             return None;
         };
         let content = if let Some((_idx, expr)) = self.iter.next_expr() {
+            // println!("content: {:?}", expr);
             expr
         } else {
             return None;
@@ -273,6 +288,19 @@ fn called_functions<'a>(expr: Expr<'a>) -> Vec<&'a str> {
 //     }
 // }
 
-fn execute_r3(a: &str, b: &str) {
+fn tokens(a: &str) -> Tokens {
+    Tokens {
+        src: a,
+        iter: a.char_indices().peekable()
+    }
+}
 
+pub fn execute_r3(a: &str, b: &str) {
+    let fns = Functions { iter: tokens(a) };
+    for f in fns {
+        println!("{:?}", f);
+        for cf in called_functions(f.content) {
+            println!("Called: {}", cf);
+        }
+    }
 }

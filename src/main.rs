@@ -57,5 +57,26 @@ fn main() {
         } else { panic!("failed to open as file") };
 
         r2::execute_r2(&content_a, &content_b);
+    } else if let Some(matches) = matches.subcommand_matches("r3") { 
+        let file_a = matches.value_of("A").unwrap();
+        let file_b = matches.value_of("B").unwrap();
+        println!("Comparing files: {}, {}", file_a, file_b);
+        
+        let path = Path::new(&file_a);
+        let content_a = if path.is_file() {
+            let mut file = File::open(path).expect("open file");
+            let mut content = String::new();
+            file.read_to_string(&mut content).expect("read file");
+            content
+        } else { panic!("failed to open as file") };
+        let path = Path::new(&file_b);
+        let content_b = if path.is_file() {
+            let mut file = File::open(path).expect("open file");
+            let mut content = String::new();
+            file.read_to_string(&mut content).expect("read file");
+            content
+        } else { panic!("failed to open as file") };
+
+        r3::execute_r3(&content_a, &content_b);
     }
 }
