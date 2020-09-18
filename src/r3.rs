@@ -324,8 +324,8 @@ pub fn execute_r3(a: &str, b: &str) {
     for f in fbi {
         fb.insert(f.ident, f);
     }
-    // println!("fa={:?}", fa);
-    // println!("fb={:?}", fb);
+    println!("第一个样例的CFG图：{:?}", fa);
+    println!("第二个样例的CFG图：{:?}", fb);
     for (ident, func_a) in fa.iter() {
         let ca = called_functions(func_a.content);
         // println!("{:?}", ca);
