@@ -1,7 +1,8 @@
 use std::str::CharIndices;
 use std::iter::Peekable;
+use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Token<'a> {
     StringLiteral(&'a str),
     Number(&'a str),
@@ -315,11 +316,42 @@ fn lines(a: Expr) -> Lines {
 }
 
 pub fn execute_r4(a: &str) {
+    let mut type_size = HashMap::new();
+    type_size.insert("int", 8);
+    type_size.insert("char", 1);
     // println!("a: {}", a);
     let fns = Functions { iter: tokens(a) };
     for f in fns {
         // println!("Function: {:?}", f);
         for line in lines(f.content) {
+            let mut tk = tokens(line.content);
+            let mut size = 0;
+            if let Some((_idx, Token::Word(word))) = tk.next() {
+                if type_size.contains_key(&word) {
+                    // println!("word: {}", word);
+                    size = type_size[word];
+                } else {
+                    continue
+                }
+            } 
+            let var_name = if let Some((_idx, Token::Word(word))) = tk.next() {
+                word
+            } else {
+                continue
+            };
+            let nxt = if let Some(a) = tk.next() { a } else { continue; };
+            if nxt.1 == Token::Symbol("[") {
+                // 数组
+                let num = if let Some((_, t)) = tk.next() { t } else { continue };
+                if let Token::Number(n) = num { 
+                    let digit: i32 = n.parse().unwrap();
+                    size *= digit;
+                }
+                tk.next(); // skip ']'
+            } else if nxt.1 == Token::Symbol("=") {
+                // 单个变量
+            }
+            println!("{}: size = {}", var_name, size);
             // println!("line: {:?}", line.content);
         }
     }
