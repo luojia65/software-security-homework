@@ -1,6 +1,5 @@
 use std::str::CharIndices;
 use std::iter::Peekable;
-use std::collections::{HashSet, HashMap};
 
 #[derive(Debug)]
 pub enum Token<'a> {
@@ -276,6 +275,52 @@ impl<'a> Iterator for Functions<'a> {
     }
 }
 
+fn tokens(a: &str) -> Tokens {
+    Tokens {
+        src: a,
+        iter: a.char_indices().peekable()
+    }
+}
+
+pub struct Lines<'a> {
+    expr: Expr<'a>,
+    iter: CharIndices<'a>,
+    start: usize,
+}
+
+pub struct Line<'a> {
+    content: &'a str,
+}
+
+impl<'a> Iterator for Lines<'a> {
+    type Item = Line<'a>;
+    fn next(&mut self) -> Option<Self::Item> {
+        while let Some((nxt_idx, nxt_chr)) = self.iter.next() {
+            if nxt_chr == ';' {
+                let ans = &self.expr.content[self.start..=nxt_idx];
+                self.start = nxt_idx + 1;
+                return Some(Line { content: ans.trim() });
+            }
+        }
+        None
+    } 
+}
+
+fn lines(a: Expr) -> Lines {
+    Lines {
+        expr: a,
+        iter: a.content.char_indices(),
+        start: 0,
+    }
+}
+
 pub fn execute_r4(a: &str) {
-    
+    // println!("a: {}", a);
+    let fns = Functions { iter: tokens(a) };
+    for f in fns {
+        // println!("Function: {:?}", f);
+        for line in lines(f.content) {
+            // println!("line: {:?}", line.content);
+        }
+    }
 }
