@@ -5,6 +5,7 @@ use clap::{Arg, App, SubCommand};
 
 mod r2;
 mod r3;
+mod r4;
 mod a1;
 
 fn main() {
