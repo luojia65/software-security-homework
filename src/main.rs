@@ -6,6 +6,7 @@ use clap::{Arg, App, SubCommand};
 mod r2;
 mod r3;
 mod r4;
+mod r5;
 mod a1;
 
 fn main() {
@@ -44,6 +45,12 @@ fn main() {
                 .takes_value(true)))
         .subcommand(SubCommand::with_name("r4")
             .about("check stack overflow")
+            .arg(Arg::with_name("A")
+                .help("Sets the input file to use")
+                .required(true)
+                .takes_value(true)))
+        .subcommand(SubCommand::with_name("r5")
+            .about("check string format vulnerbilities")
             .arg(Arg::with_name("A")
                 .help("Sets the input file to use")
                 .required(true)
@@ -126,5 +133,18 @@ fn main() {
         } else { panic!("failed to open as file") };
 
         r4::execute_r4(&content_a);
+    } else if let Some(matches) = matches.subcommand_matches("r5") { 
+        let file_a = matches.value_of("A").unwrap();
+        println!("Using file: {}", file_a);
+        
+        let path = Path::new(&file_a);
+        let content_a = if path.is_file() {
+            let mut file = File::open(path).expect("open file");
+            let mut content = String::new();
+            file.read_to_string(&mut content).expect("read file");
+            content
+        } else { panic!("failed to open as file") };
+
+        r5::execute_r5(&content_a);
     }
 }
