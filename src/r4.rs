@@ -290,6 +290,7 @@ pub struct Lines<'a> {
 }
 
 pub struct Line<'a> {
+    idx: usize, 
     content: &'a str,
 }
 
@@ -299,8 +300,9 @@ impl<'a> Iterator for Lines<'a> {
         while let Some((nxt_idx, nxt_chr)) = self.iter.next() {
             if nxt_chr == ';' {
                 let ans = &self.expr.content[self.start..=nxt_idx];
+                let idx = self.start;
                 self.start = nxt_idx + 1;
-                return Some(Line { content: ans.trim() });
+                return Some(Line { idx, content: ans.trim() });
             }
         }
         None
@@ -322,7 +324,9 @@ pub fn execute_r4(a: &str) {
     // println!("a: {}", a);
     let fns = Functions { iter: tokens(a) };
     for f in fns {
+        let mut var_size = HashMap::new();
         // println!("Function: {:?}", f);
+        // 扫描所有行，得到变量和它的内存占用大小
         for line in lines(f.content) {
             let mut tk = tokens(line.content);
             let mut size = 0;
@@ -350,9 +354,59 @@ pub fn execute_r4(a: &str) {
                 tk.next(); // skip ']'
             } else if nxt.1 == Token::Symbol("=") {
                 // 单个变量
+                // 这里什么也不做
             }
-            println!("{}: size = {}", var_name, size);
+            // println!("{}: size = {}", var_name, size);
             // println!("line: {:?}", line.content);
+            var_size.insert(var_name, size);
+        }
+        for (idx, token) in tokens(a) {
+            if let Token::Word(w) = token {
+                match w {
+                    "strcpy" | "strncpy" | "memcpy" | "memncpy" | "strcat" | "strncat" | 
+                    "sprintf" | "vsprintf" | "gets" | "getchar" | "fgetc" | "getc" | 
+                    "read" | "sscanf" | "fscanf" | "vfscanf" | "vscanf" | "vsscanf" => {
+                        println!("possible senstive function {} at index {}!", w, idx);
+                    }
+                    _ => {}
+                }
+            }
+        }
+        // 扫描所有行，得到使用这些变量的情况
+        for line in lines(f.content) {
+            let mut tok = tokens(line.content);
+            while let Some((_idx, tk)) = tok.next() {
+                match tk {
+                    Token::Word("strncpy") => {
+                        tok.next(); // (
+                        let (_, dest) = if let Some(a) = tok.next() { a } else { continue }; // param 1: dest
+                        tok.next(); // ,
+                        tok.next(); // param 2: src
+                        tok.next(); // ,
+                        let (_, cnt) = if let Some(a) = tok.next() { a } else { continue };
+                        if let (Token::Word(d), Token::Number(n)) = (dest, cnt) {
+                            let size = if let Some(&val) = var_size.get(d) { val } else { continue };
+                            let digit: i32 = n.parse().unwrap();
+                            if size < digit {
+                                println!("stack overflow for strncpy at index {}", line.idx);
+                            }
+                        }
+                    },
+                    Token::Word("strcpy") => {
+                        tok.next(); // (
+                        let (_, dest) = if let Some(a) = tok.next() { a } else { continue }; // param 1: dest
+                        tok.next(); // ,
+                        let (_, src) = if let Some(a) = tok.next() { a } else { continue }; // param 2: src
+                        if let (Token::Word(d), Token::StringLiteral(s)) = (dest, src) {
+                            let size = if let Some(&val) = var_size.get(d) { val } else { continue };
+                            if (size as usize) < s.len() {
+                                println!("stack overflow for strcpy at index {}", line.idx);
+                            }
+                        }
+                    },
+                    _ => continue,
+                }
+            }
         }
     }
 }
