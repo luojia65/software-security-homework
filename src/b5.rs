@@ -318,18 +318,46 @@ fn lines(a: Expr) -> Lines {
     }
 }
 
-pub fn execute_r4(a: &str) {
-    let mut type_size = HashMap::new();
-    type_size.insert("int", 8);
-    type_size.insert("char", 1);
-    // println!("a: {}", a);
+fn line_number_from_line_idx(a: &str, i: usize) -> usize {
+    let mut ans = 0;
+    for ch in a[..i].chars() {
+        if ch == '\n' {
+            ans += 1;
+        }
+    }
+    ans
+}
+
+pub fn execute_b5(a: &str) {
     let fns = Functions { iter: tokens(a) };
     for f in fns {
-        let mut var_size = HashMap::new();
-        // println!("Function: {:?}", f);
-        // 扫描所有行，得到变量和它的内存占用大小
+        let mut var = HashMap::new(); // name -> is NULL?
         for line in lines(f.content) {
-            let mut tk = tokens(line.content);
+            let ln = line_number_from_line_idx(f.content.content, line.idx)+1;
+            let mut tk = tokens(line.content).peekable();
+            while let Some((idx, Token::Word(left))) = tk.next() {
+                // println!("{:?} {:?}", left, tk.peek());
+                let (_, right) = if let Some((_, Token::Symbol("="))) = tk.peek() {
+                    tk.next(); // =
+                    if let Some(i) = tk.next() { i } else { continue }
+                } else {
+                    continue
+                };
+                // println!("{:?}; {:?}", left, right);
+                if right == Token::Word("NULL") {
+                    var.insert(left, true);
+                } else if right == Token::Symbol("*") {
+                    if let Some((_, Token::Word(r))) = tk.next() {
+                        if let Some(true) = var.get(r) {
+                            println!("Unref a NULL pointer at function {}, line {}, index {}", f.ident.name, ln, idx);
+                        } else {
+                            println!("Safe unref at function {}, line {}, index {}", f.ident.name, ln, idx);
+                        }
+                    }
+                } else {
+                    var.insert(left, false);
+                }
+            }
         }
     }
 }
