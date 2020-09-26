@@ -1,3 +1,4 @@
+// 检测空指针异常！
 use std::str::CharIndices;
 use std::iter::Peekable;
 use std::collections::HashMap;
@@ -317,51 +318,18 @@ fn lines(a: Expr) -> Lines {
     }
 }
 
-fn format_extract(a: &str) -> Vec<&str> {
-    let mut ans = Vec::new();
-    let mut iter = a.char_indices().peekable();
-    while let Some(ch) = iter.next() {
-        if let ((idx, '%'), Some(&(_, nxt))) = (ch, iter.peek()) {
-            if nxt != '%' {
-                ans.push(&a[idx..=idx+1])
-            }
-        }
-    }
-    ans
-}
-
-// 有没有格式化字符串出现的溢出问题
-pub fn execute_r5(a: &str) {
+pub fn execute_r4(a: &str) {
+    let mut type_size = HashMap::new();
+    type_size.insert("int", 8);
+    type_size.insert("char", 1);
+    // println!("a: {}", a);
     let fns = Functions { iter: tokens(a) };
     for f in fns {
+        let mut var_size = HashMap::new();
+        // println!("Function: {:?}", f);
+        // 扫描所有行，得到变量和它的内存占用大小
         for line in lines(f.content) {
             let mut tk = tokens(line.content);
-            while let Some((idx, token)) = tk.next() {
-                match token {
-                    Token::Word("printf") => {
-                        tk.next(); // (
-                        let format = if let Some((_, Token::StringLiteral(a))) = tk.next() { a } else { continue }; // param 1: dest
-                        let format = format_extract(format);
-                        println!("Format: {:?}", format);
-                        let mut cnt = 0;
-                        while let Some((_, nxt)) = tk.next() {
-                            if let Token::Word(_name) = nxt {
-                                cnt += 1;
-                            }
-                            if let Token::Symbol(")") = nxt {
-                                break;
-                            }
-                        }
-                        println!("printf detected at index {}", idx);
-                        if cnt != format.len() {
-                            println!("vulunable printf at index {}!", idx);
-                        } else {
-                            println!("this printf is okay")
-                        }
-                    },
-                    _ => {}
-                }
-            }
         }
     }
 }
