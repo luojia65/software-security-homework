@@ -1,7 +1,5 @@
 use std::str::CharIndices;
 use std::iter::Peekable;
-use std::collections::HashMap;
-
 #[derive(Debug, Eq, PartialEq)]
 pub enum Token<'a> {
     StringLiteral(&'a str),
@@ -330,18 +328,35 @@ fn format_extract(a: &str) -> Vec<&str> {
     ans
 }
 
+fn line_number_from_line_idx(a: &str, i: usize) -> usize {
+    let mut ans = 0;
+    for ch in a[..i].chars() {
+        if ch == '\n' {
+            ans += 1;
+        }
+    }
+    ans
+}
+
 // 有没有格式化字符串出现的溢出问题
 pub fn execute_r5(a: &str) {
     let fns = Functions { iter: tokens(a) };
     for f in fns {
         for line in lines(f.content) {
+            let ln = line_number_from_line_idx(a, line.idx);
             let mut tk = tokens(line.content);
             while let Some((idx, token)) = tk.next() {
                 match token {
                     Token::Word("printf") => {
+                        println!("[] printf detected at line {}, index {}", ln, idx);
                         tk.next(); // (
                         let format = if let Some((_, Token::StringLiteral(a))) = tk.next() { a } else { continue }; // param 1: dest
                         let format = format_extract(format);
+                        for &fm in &format {
+                            if fm == "%n" {
+                                println!("vulnerable '%n' parameter!")
+                            }
+                        }
                         println!("Format: {:?}", format);
                         let mut cnt = 0;
                         while let Some((_, nxt)) = tk.next() {
@@ -352,7 +367,34 @@ pub fn execute_r5(a: &str) {
                                 break;
                             }
                         }
-                        println!("printf detected at index {}", idx);
+                        if cnt != format.len() {
+                            println!("vulunable printf at index {}!", idx);
+                        } else {
+                            println!("this printf is okay")
+                        }
+                    },
+                    Token::Word("sprintf") => {
+                        println!("[] sprintf detected at line {}, index {}", ln, idx);
+                        tk.next(); // (
+                        tk.next(); // param1: target
+                        tk.next(); // ,
+                        let format = if let Some((_, Token::StringLiteral(a))) = tk.next() { a } else { continue }; // param 1: dest
+                        let format = format_extract(format);
+                        println!("Format: {:?}", format);
+                        let mut cnt = 0;
+                        for &fm in &format {
+                            if fm == "%n" {
+                                println!("vulnerable '%n' parameter!")
+                            }
+                        }
+                        while let Some((_, nxt)) = tk.next() {
+                            if let Token::Word(_name) = nxt {
+                                cnt += 1;
+                            }
+                            if let Token::Symbol(")") = nxt {
+                                break;
+                            }
+                        }
                         if cnt != format.len() {
                             println!("vulunable printf at index {}!", idx);
                         } else {
