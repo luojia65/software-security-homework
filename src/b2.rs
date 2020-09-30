@@ -363,7 +363,7 @@ fn params(a: Expr) -> Params {
 //     ans
 // }
 
-pub fn execute_b1(a: &str) {
+pub fn execute_b2(a: &str) {
     let fns = Functions { iter: tokens(a) };
     let mut type_size = HashMap::new();
     type_size.insert("int", 8);

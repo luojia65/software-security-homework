@@ -8,7 +8,7 @@ mod r3;
 mod r4;
 mod r5;
 mod a1;
-mod b1;
+mod b2;
 mod b4;
 mod b5;
 
@@ -58,7 +58,7 @@ fn main() {
                 .help("Sets the input file to use")
                 .required(true)
                 .takes_value(true)))
-        .subcommand(SubCommand::with_name("b1")
+        .subcommand(SubCommand::with_name("b2")
             .about("check string format vulnerbilities")
             .arg(Arg::with_name("A")
                 .help("Sets the input file to use")
@@ -167,7 +167,7 @@ fn main() {
         } else { panic!("failed to open as file") };
 
         r5::execute_r5(&content_a);
-    } else if let Some(matches) = matches.subcommand_matches("b1") { 
+    } else if let Some(matches) = matches.subcommand_matches("b2") { 
         let file_a = matches.value_of("A").unwrap();
         println!("Using file: {}", file_a);
         
@@ -179,7 +179,7 @@ fn main() {
             content
         } else { panic!("failed to open as file") };
 
-        b1::execute_b1(&content_a);
+        b2::execute_b2(&content_a);
     } else if let Some(matches) = matches.subcommand_matches("b4") { 
         let file_a = matches.value_of("A").unwrap();
         println!("Using file: {}", file_a);
