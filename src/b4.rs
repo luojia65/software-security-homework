@@ -354,17 +354,17 @@ fn params(a: Expr) -> Params {
     }
 }
 
-fn line_number_from_line_idx(a: &str, i: usize) -> usize {
-    let mut ans = 0;
-    for ch in a[..i].chars() {
-        if ch == '\n' {
-            ans += 1;
-        }
-    }
-    ans
-}
+// fn line_number_from_line_idx(a: &str, i: usize) -> usize {
+//     let mut ans = 0;
+//     for ch in a[..i].chars() {
+//         if ch == '\n' {
+//             ans += 1;
+//         }
+//     }
+//     ans
+// }
 
-pub fn execute_b2(a: &str) {
+pub fn execute_b4(a: &str) {
     let fns = Functions { iter: tokens(a) };
     for f in fns {
         let mut var = HashMap::new();
@@ -372,7 +372,7 @@ pub fn execute_b2(a: &str) {
         for line in params(f.params).chain(lines(f.content)) {
             // println!("{}", line.content);
             let mut tk = tokens(line.content);
-            let mut size = 0;
+            // let mut size = 0;
             let ty = if let Some((_idx, Token::Word(ty))) = tk.next() {
                 if ty == "unsigned" {
                     continue
