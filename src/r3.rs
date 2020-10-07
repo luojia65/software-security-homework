@@ -324,13 +324,13 @@ pub fn execute_r3(a: &str, b: &str) {
     for f in fbi {
         fb.insert(f.ident, f);
     }
-    println!("第一个样例的CFG图：{:?}", fa);
-    println!("第二个样例的CFG图：{:?}", fb);
     for (ident, func_a) in fa.iter() {
         let ca = called_functions(func_a.content);
         // println!("{:?}", ca);
         if let Some(func_b) = fb.get(&ident) {
             let cb = called_functions(func_b.content);
+            println!("第一个样例的CFG图：{:?} - {:?}", func_a.ident.name, ca);
+            println!("第二个样例的CFG图：{:?} - {:?}", func_b.ident.name, cb);
             // println!("{:?}, {:?}", ca, cb);
             if ca == cb {
                 println!("完全重复！");
