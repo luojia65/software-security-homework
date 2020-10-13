@@ -339,7 +339,7 @@ pub fn execute_b5(a: &str) {
                 // println!("{:?} {:?}", left, tk.peek());
                 let (_, right) = if let Some((_, Token::Symbol("="))) = tk.peek() {
                     tk.next(); // =
-                    if let Some(i) = tk.next() { i } else { continue }
+                    if let Some(i ) = tk.next() { i } else { continue }
                 } else {
                     continue
                 };

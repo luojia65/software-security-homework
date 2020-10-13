@@ -405,7 +405,7 @@ pub fn execute_b3(a: &str) {
             if let (Some(lt), Some(rt)) = (var.get(l), var.get(r)) {
                 if let (Some(ll), Some(rl)) = (type_size.get(lt), type_size.get(rt)) {
                     if ll < rl {
-                        println!("整数长度溢出：左边变量{},类型{};右边变量{},类型:{}。位置:{}", l, lt, r, rt, idx);
+                        println!("整数运算溢出：变量{},类型{} 位置:{}", l, lt, idx);
                     }
                 }
             }
