@@ -1,5 +1,5 @@
 use std::path::Path;
-use std::fs::File;
+use std::fs::{OpenOptions, File};
 use std::io::Read;
 use clap::{Arg, App, SubCommand};
 
@@ -36,6 +36,9 @@ fn main() {
             .arg(Arg::with_name("B")
                 .help("Sets the second input file to use")
                 .required(true)
+                .takes_value(true))
+            .arg(Arg::with_name("File")
+                .help("Sets the CFG output file")
                 .takes_value(true)))
         .subcommand(SubCommand::with_name("a1")
             .about("compare C code file and Rust code file")
@@ -126,7 +129,20 @@ fn main() {
             content
         } else { panic!("failed to open as file") };
 
-        r3::execute_r3(&content_a, &content_b);
+        let ans = r3::execute_r3(&content_a, &content_b);
+        if let Some(out_path) = matches.value_of("File") {
+            let mut file = OpenOptions::new()
+                .write(true)
+                .create(true)
+                .open(out_path).expect("open output file");
+            for (a, b) in ans {
+                use std::io::Write;
+                file.write(a.as_bytes()).unwrap();
+                file.write(&[b'\n']).unwrap();
+                file.write(b.as_bytes()).unwrap();
+                file.write(&[b'\n']).unwrap();
+            }
+        }
     } else if let Some(matches) = matches.subcommand_matches("a1") { 
         let file_a = matches.value_of("A").unwrap();
         let file_b = matches.value_of("B").unwrap();

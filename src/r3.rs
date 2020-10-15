@@ -311,7 +311,7 @@ fn tokens(a: &str) -> Tokens {
     }
 }
 
-pub fn execute_r3(a: &str, b: &str) {
+pub fn execute_r3(a: &str, b: &str) -> Vec<(String, String)> {
     // println!("{:?}", a);
     // println!("{:?}", b);
     let mut fa = HashMap::new();
@@ -324,6 +324,7 @@ pub fn execute_r3(a: &str, b: &str) {
     for f in fbi {
         fb.insert(f.ident, f);
     }
+    let mut ans = Vec::new();
     for (ident, func_a) in fa.iter() {
         let ca = called_functions(func_a.content);
         // println!("{:?}", ca);
@@ -331,6 +332,7 @@ pub fn execute_r3(a: &str, b: &str) {
             let cb = called_functions(func_b.content);
             println!("第一个样例的CFG图：{:?} - {:?}", func_a.ident.name, ca);
             println!("第二个样例的CFG图：{:?} - {:?}", func_b.ident.name, cb);
+            ans.push((format!("{:?} - {:?}", func_a.ident.name, ca), format!("{:?} - {:?}", func_b.ident.name, cb)));
             // println!("{:?}, {:?}", ca, cb);
             let mut a = 0;
             let mut b = 0;
@@ -344,4 +346,5 @@ pub fn execute_r3(a: &str, b: &str) {
             println!("重复率：{}%", 100.0 * rate);
         }
     } 
+    ans
 }
