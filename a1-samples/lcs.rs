@@ -1,4 +1,4 @@
-pub fn execute_r2(a: &str, b: &str) {
+fn execute_r2(a: String, b: String) {
     let a = items(a).collect::<Vec<_>>();
     let b = items(b).collect::<Vec<_>>();
 

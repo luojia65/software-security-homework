@@ -290,26 +290,35 @@ pub fn compare_language(a: &str, b: &str) {
     let mut fa = HashMap::new();
     let fai = Functions { iter: tokens(a) };
     for f in fai {
+        // println!("1 {:?}", f);
         fa.insert(f.ident, f);
     }
     let mut fb = HashMap::new();
     let fbi = Functions { iter: tokens(b) };
     for f in fbi {
+        // println!("2 {:?}", f);
         fb.insert(f.ident, f);
     }
+    // let mut ans = Vec::new();
     for (ident, func_a) in fa.iter() {
         let ca = called_functions(func_a.content);
         // println!("{:?}", ca);
         if let Some(func_b) = fb.get(&ident) {
             let cb = called_functions(func_b.content);
-            println!("第一个样例的CFG图：{:?}->{:?}", func_a.ident.name, ca);
-            println!("第二个样例的CFG图：{:?}->{:?}", func_b.ident.name, cb);
+            println!("第一个样例的CFG图：{:?} - {:?}", func_a.ident.name, ca);
+            println!("第二个样例的CFG图：{:?} - {:?}", func_b.ident.name, cb);
+            // ans.push((format!("{:?} - {:?}", func_a.ident.name, ca), format!("{:?} - {:?}", func_b.ident.name, cb)));
             // println!("{:?}, {:?}", ca, cb);
-            if ca == cb {
-                println!("完全重复！");
-                return;
+            let mut a = 0;
+            let mut b = 0;
+            for i in ca {
+                if cb.contains(&i) {
+                    a+=1;
+                }
+                b+=1;
             }
+            let rate = a as f32 / b as f32;
+            println!("重复率：{}%", 100.0 * rate);
         }
     } 
-    println!("不完全重复！");
 }
