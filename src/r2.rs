@@ -162,11 +162,9 @@ pub fn execute_r2(a: &str, b: &str) {
             j -= 1;
         } else {
             if dp[i*(lb + 1) + j - 1] > dp[(i-1)*(lb + 1) + j] {
-                println!("B: {:?}", cb);
                 sb.next();
                 j -= 1;
-            } else {
-                println!("A: {:?}", ca);
+            } else {\
                 sa.next();
                 i -= 1;
             }
