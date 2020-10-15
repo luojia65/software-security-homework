@@ -317,6 +317,20 @@ fn lines(a: Expr) -> Lines {
     }
 }
 
+fn line_number_from_line_idx(a: &str, i: usize) -> (usize, usize) {
+    let mut ln = 0;
+    let mut col = 0;
+    let a = if i >= a.len() { a } else { &a[..i] };
+    for ch in a.chars() {
+        col += 1;
+        if ch == '\n' {
+            col = 0;
+            ln += 1;
+        }
+    }
+    (ln, col)
+}
+
 pub fn execute_r4(a: &str) {
     let mut type_size = HashMap::new();
     type_size.insert("int", 8);
@@ -366,7 +380,8 @@ pub fn execute_r4(a: &str) {
                     "strcpy" | "strncpy" | "memcpy" | "memncpy" | "strcat" | "strncat" | 
                     "sprintf" | "vsprintf" | "gets" | "getchar" | "fgetc" | "getc" | 
                     "read" | "sscanf" | "fscanf" | "vfscanf" | "vscanf" | "vsscanf" => {
-                        println!("possible senstive function {} at index {}!", w, idx);
+                        let (l, c) = line_number_from_line_idx(a, idx);
+                        println!("possible senstive function {} at line {}, col {} !", w, l, c);
                     }
                     _ => {}
                 }
@@ -388,7 +403,8 @@ pub fn execute_r4(a: &str) {
                             let size = if let Some(&val) = var_size.get(d) { val } else { continue };
                             let digit: i32 = n.parse().unwrap();
                             if size < digit {
-                                println!("stack overflow for strncpy at index {}", line.idx);
+                                let (l, c) = line_number_from_line_idx(line.content, line.idx);
+                                println!("stack overflow for strncpy at line {}, col {}", l, c);
                             }
                         }
                     },
@@ -400,7 +416,8 @@ pub fn execute_r4(a: &str) {
                         if let (Token::Word(d), Token::StringLiteral(s)) = (dest, src) {
                             let size = if let Some(&val) = var_size.get(d) { val } else { continue };
                             if (size as usize) < s.len() {
-                                println!("stack overflow for strcpy at index {}", line.idx);
+                                let (l, c) = line_number_from_line_idx(line.content, line.idx);
+                                println!("stack overflow for strcpy at line {}, col {}", l, c);
                             }
                         }
                     },
