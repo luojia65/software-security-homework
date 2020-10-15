@@ -318,7 +318,7 @@ fn lines(a: Expr) -> Lines {
 }
 
 fn line_number_from_line_idx(a: &str, i: usize) -> (usize, usize) {
-    let mut ln = 0;
+    let mut ln = 1;
     let mut col = 0;
     let a = if i >= a.len() { a } else { &a[..i] };
     for ch in a.chars() {

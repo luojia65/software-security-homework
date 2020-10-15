@@ -12,6 +12,7 @@ mod b2;
 mod b3;
 mod b4;
 mod b5;
+mod gen;
 
 fn main() {
     let matches = App::new("Software safety homework")
@@ -86,6 +87,8 @@ fn main() {
                 .help("Sets the input file to use")
                 .required(true)
                 .takes_value(true)))
+        .subcommand(SubCommand::with_name("gen")
+            .about("generate vulnerable samples"))
         .get_matches();
     
     if let Some(matches) = matches.subcommand_matches("r2") {
