@@ -332,11 +332,16 @@ pub fn execute_r3(a: &str, b: &str) {
             println!("第一个样例的CFG图：{:?} - {:?}", func_a.ident.name, ca);
             println!("第二个样例的CFG图：{:?} - {:?}", func_b.ident.name, cb);
             // println!("{:?}, {:?}", ca, cb);
-            if ca == cb {
-                println!("完全重复！");
-                return;
+            let mut a = 0;
+            let mut b = 0;
+            for i in ca {
+                if cb.contains(&i) {
+                    a+=1;
+                }
+                b+=1;
             }
+            let rate = a as f32 / b as f32;
+            println!("重复率：{}%", 100.0 * rate);
         }
     } 
-    println!("不完全重复！");
 }
