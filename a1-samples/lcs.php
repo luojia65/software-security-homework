@@ -3,7 +3,7 @@ function execute_r2(string $a, string $b) {
     $a = items($a)->collect();
     $b = items($b)->collect();
     $la = $a->len();
-    $$lb = $b->len();
+    $lb = $b->len();
     $dp = array(); // size = ($la + 1) * ($lb + 1)
     for($i=0; $i<$la; ++$i) {
         for($j=0; $j<$la; ++$j) {
