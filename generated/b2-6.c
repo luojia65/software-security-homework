@@ -1,0 +1,30 @@
+void laiuMTJ8sm(int* vZoxy2ZoYC, unsigned int nbzQ0f31vm) {
+    int nkZTyBUlQY;
+    int* Yv3xz76bpu;
+    int VimIjY_beu;
+    int v0qnSGDL1z;
+    int* NBEm6zLJef;
+    char AZI9maRy7t;
+    unsigned int MHrAg9jinT;
+    unsigned int plN7mcoshO;
+    MHrAg9jinT = AZI9maRy7t;
+    MHrAg9jinT = nkZTyBUlQY;
+    Yv3xz76bpu = v0qnSGDL1z;
+    nbzQ0f31vm = plN7mcoshO;
+    v0qnSGDL1z = vZoxy2ZoYC;
+    nbzQ0f31vm = NBEm6zLJef;
+    nbzQ0f31vm = nkZTyBUlQY;
+    VimIjY_beu = NBEm6zLJef;
+    v0qnSGDL1z = nbzQ0f31vm;
+    VimIjY_beu = Yv3xz76bpu;
+    nbzQ0f31vm = Yv3xz76bpu;
+    MHrAg9jinT = nbzQ0f31vm;
+    vZoxy2ZoYC = NBEm6zLJef;
+    MHrAg9jinT = plN7mcoshO;
+    plN7mcoshO = Yv3xz76bpu;
+    plN7mcoshO = VimIjY_beu;
+    nbzQ0f31vm = v0qnSGDL1z;
+    AZI9maRy7t = MHrAg9jinT;
+    nkZTyBUlQY = vZoxy2ZoYC;
+    v0qnSGDL1z = nbzQ0f31vm;
+}

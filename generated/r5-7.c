@@ -1,0 +1,30 @@
+void fTfrCsXApR(int* LiXMC3JWWl, unsigned short rrVhxF9BXr) {
+    short hda1zVpIm6;
+    unsigned short YHsv7Rwow0;
+    unsigned int on3Qk2VcJT;
+    int* UI0jF8YGWH;
+    unsigned short PVIrWynxVu;
+    int* t3K2phMRdp;
+    unsigned char Hp2d6OoT87;
+    char jE8NpTqWlt;
+    printf("", on3Qk2VcJT, rrVhxF9BXr);
+    printf("%f%n", UI0jF8YGWH, hda1zVpIm6, YHsv7Rwow0, PVIrWynxVu);
+    printf("%lld", Hp2d6OoT87);
+    printf("");
+    printf("%d%f", hda1zVpIm6, hda1zVpIm6, rrVhxF9BXr, rrVhxF9BXr);
+    printf("%f", hda1zVpIm6, rrVhxF9BXr, YHsv7Rwow0, hda1zVpIm6);
+    printf("%f%f%lld%d", hda1zVpIm6, hda1zVpIm6);
+    printf("%d%lld%f%f");
+    printf("%n%d", rrVhxF9BXr, hda1zVpIm6);
+    printf("%n%f", Hp2d6OoT87, on3Qk2VcJT, on3Qk2VcJT, rrVhxF9BXr);
+    printf("%lld%lld", PVIrWynxVu, Hp2d6OoT87, PVIrWynxVu, Hp2d6OoT87);
+    printf("%d%n%d%n", Hp2d6OoT87);
+    printf("%d%f", UI0jF8YGWH, PVIrWynxVu, YHsv7Rwow0, UI0jF8YGWH);
+    printf("%d%n", UI0jF8YGWH);
+    printf("%d%n%lld%f", jE8NpTqWlt, Hp2d6OoT87, YHsv7Rwow0);
+    printf("%n%f%f", jE8NpTqWlt);
+    printf("%f%n%d%n", t3K2phMRdp, UI0jF8YGWH);
+    printf("%lld%f%lld", on3Qk2VcJT, LiXMC3JWWl, on3Qk2VcJT, t3K2phMRdp);
+    printf("", LiXMC3JWWl, LiXMC3JWWl, Hp2d6OoT87, Hp2d6OoT87);
+    printf("%d%lld%d%n");
+}

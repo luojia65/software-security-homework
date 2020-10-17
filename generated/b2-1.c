@@ -1,0 +1,30 @@
+void Nlf_tCIDGs(unsigned int Yu4ztv9nuJ, unsigned short Us4fMCQj8X) {
+    int* IrfNaEboEW;
+    short T_bFkIiQbx;
+    unsigned char EyyqUznywz;
+    int* CjhpAz56ox;
+    unsigned short I9dfCFLBH1;
+    int* WIT1Tgt16q;
+    int* KNtjt90UVk;
+    unsigned short pioLjH48Rb;
+    EyyqUznywz = CjhpAz56ox;
+    WIT1Tgt16q = pioLjH48Rb;
+    pioLjH48Rb = WIT1Tgt16q;
+    Yu4ztv9nuJ = pioLjH48Rb;
+    pioLjH48Rb = I9dfCFLBH1;
+    I9dfCFLBH1 = CjhpAz56ox;
+    WIT1Tgt16q = I9dfCFLBH1;
+    EyyqUznywz = Yu4ztv9nuJ;
+    pioLjH48Rb = KNtjt90UVk;
+    pioLjH48Rb = IrfNaEboEW;
+    pioLjH48Rb = CjhpAz56ox;
+    pioLjH48Rb = WIT1Tgt16q;
+    I9dfCFLBH1 = CjhpAz56ox;
+    IrfNaEboEW = pioLjH48Rb;
+    T_bFkIiQbx = pioLjH48Rb;
+    pioLjH48Rb = WIT1Tgt16q;
+    pioLjH48Rb = IrfNaEboEW;
+    KNtjt90UVk = EyyqUznywz;
+    WIT1Tgt16q = I9dfCFLBH1;
+    WIT1Tgt16q = I9dfCFLBH1;
+}

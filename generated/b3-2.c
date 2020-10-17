@@ -1,0 +1,30 @@
+void zolwaFI11a(char* r7fBRd3FdO, char* btNeUNrmUX) {
+    unsigned short* Q1Be_lMDXO;
+    unsigned int* Y37IPZHq4u;
+    int* JPf_5uzo83;
+    int* t6ascxjemk;
+    char* JRbFgZ7cAC;
+    short* ZDGd5KeRQ3;
+    unsigned short* bREQRHJWmv;
+    int* sNEqoRwPLw;
+    btNeUNrmUX = (char*) malloc (Y37IPZHq4u);
+    sNEqoRwPLw = (int*) malloc (Y37IPZHq4u * sizeof(char));
+    r7fBRd3FdO = (char*) malloc (ZDGd5KeRQ3 * sizeof(short));
+    sNEqoRwPLw = (int*) malloc (t6ascxjemk + r7fBRd3FdO);
+    Q1Be_lMDXO = (unsigned short*) malloc (sizeof(short) * JPf_5uzo83);
+    btNeUNrmUX = (char*) malloc (sizeof(short) * btNeUNrmUX);
+    JPf_5uzo83 = (int*) malloc (bREQRHJWmv * btNeUNrmUX);
+    t6ascxjemk = (int*) malloc (JRbFgZ7cAC);
+    ZDGd5KeRQ3 = (short*) malloc (sizeof(short) * btNeUNrmUX);
+    t6ascxjemk = (int*) malloc (t6ascxjemk * sizeof(short));
+    JPf_5uzo83 = (int*) malloc (sizeof(short) * r7fBRd3FdO);
+    Q1Be_lMDXO = (unsigned short*) malloc (JRbFgZ7cAC * sNEqoRwPLw);
+    JPf_5uzo83 = (int*) malloc (JRbFgZ7cAC + sNEqoRwPLw);
+    Q1Be_lMDXO = (unsigned short*) malloc (btNeUNrmUX * sNEqoRwPLw);
+    JRbFgZ7cAC = (char*) malloc (sizeof(char) * JPf_5uzo83);
+    r7fBRd3FdO = (char*) malloc (t6ascxjemk * sizeof(int));
+    ZDGd5KeRQ3 = (short*) malloc (bREQRHJWmv + sNEqoRwPLw);
+    t6ascxjemk = (int*) malloc (bREQRHJWmv);
+    t6ascxjemk = (int*) malloc (bREQRHJWmv * r7fBRd3FdO);
+    Q1Be_lMDXO = (unsigned short*) malloc (r7fBRd3FdO * sizeof(short));
+}

@@ -9,6 +9,8 @@ edition = "2018"
 [dependencies]
 clap = "2"
 
+rand = "*"
+
 # glib = "^0"
 # gio = "^0"
 # gtk = "^0"

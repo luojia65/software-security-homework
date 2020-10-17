@@ -1,0 +1,30 @@
+void HNQSEveXOt(unsigned short* TfGhXYV8Qg, unsigned int* nUOpRo5ee7) {
+    char* lf2Lz4jqtr;
+    short* PG3jcXM4Ec;
+    unsigned int* QiU0oL_Flz;
+    char* vtZoX32tZS;
+    unsigned int* o22sFdU82c;
+    unsigned short* pVvYypC8Wl;
+    unsigned char* TyPNdxLXcL;
+    unsigned short* TNwup626V0;
+    nUOpRo5ee7 = (unsigned int*) malloc (lf2Lz4jqtr);
+    TfGhXYV8Qg = (unsigned short*) malloc (PG3jcXM4Ec * TfGhXYV8Qg);
+    o22sFdU82c = (unsigned int*) malloc (TfGhXYV8Qg * sizeof(short));
+    lf2Lz4jqtr = (char*) malloc (TNwup626V0);
+    QiU0oL_Flz = (unsigned int*) malloc (sizeof(short) * PG3jcXM4Ec);
+    nUOpRo5ee7 = (unsigned int*) malloc (sizeof(short) * vtZoX32tZS);
+    TNwup626V0 = (unsigned short*) malloc (vtZoX32tZS * sizeof(short));
+    pVvYypC8Wl = (unsigned short*) malloc (pVvYypC8Wl);
+    PG3jcXM4Ec = (short*) malloc (sizeof(short) * TyPNdxLXcL);
+    PG3jcXM4Ec = (short*) malloc (vtZoX32tZS);
+    TyPNdxLXcL = (unsigned char*) malloc (QiU0oL_Flz * sizeof(int));
+    nUOpRo5ee7 = (unsigned int*) malloc (TfGhXYV8Qg * o22sFdU82c);
+    PG3jcXM4Ec = (short*) malloc (o22sFdU82c * vtZoX32tZS);
+    pVvYypC8Wl = (unsigned short*) malloc (vtZoX32tZS);
+    PG3jcXM4Ec = (short*) malloc (lf2Lz4jqtr * TyPNdxLXcL);
+    lf2Lz4jqtr = (char*) malloc (TNwup626V0 * sizeof(short));
+    QiU0oL_Flz = (unsigned int*) malloc (PG3jcXM4Ec + pVvYypC8Wl);
+    lf2Lz4jqtr = (char*) malloc (PG3jcXM4Ec * TyPNdxLXcL);
+    nUOpRo5ee7 = (unsigned int*) malloc (sizeof(short) * lf2Lz4jqtr);
+    lf2Lz4jqtr = (char*) malloc (TNwup626V0 + nUOpRo5ee7);
+}

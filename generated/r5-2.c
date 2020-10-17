@@ -1,0 +1,30 @@
+void e5YuKa91Mr(unsigned char XQTGKTt8BM, unsigned short w2_gh6RkNw) {
+    unsigned short mUErNzWesI;
+    int PflpUTsNyI;
+    unsigned short qF5gQNIl3w;
+    unsigned int vmgKOu_8ko;
+    unsigned char IdvYEz_HHI;
+    unsigned short U_s3DFquWq;
+    unsigned short RApiKPazuw;
+    char HNVKluS5xK;
+    printf("%n", XQTGKTt8BM);
+    printf("%n%d%lld%d", IdvYEz_HHI);
+    printf("%n%n", U_s3DFquWq, RApiKPazuw, RApiKPazuw);
+    printf("%n%f%n", mUErNzWesI, HNVKluS5xK, RApiKPazuw);
+    printf("%f%d%f%n", RApiKPazuw, qF5gQNIl3w, RApiKPazuw);
+    printf("%n", IdvYEz_HHI, HNVKluS5xK, qF5gQNIl3w, RApiKPazuw);
+    printf("%d%f");
+    printf("%f%lld", HNVKluS5xK, qF5gQNIl3w, HNVKluS5xK);
+    printf("%lld%f%n%f", w2_gh6RkNw, U_s3DFquWq);
+    printf("%lld%lld%n");
+    printf("%d%f", PflpUTsNyI, PflpUTsNyI, PflpUTsNyI, RApiKPazuw);
+    printf("%lld");
+    printf("%n%n%d%d", mUErNzWesI);
+    printf("%f%lld%n%d", RApiKPazuw, U_s3DFquWq);
+    printf("%n");
+    printf("", HNVKluS5xK, IdvYEz_HHI, qF5gQNIl3w, qF5gQNIl3w);
+    printf("%d", vmgKOu_8ko);
+    printf("%n%d%n", HNVKluS5xK);
+    printf("%n%lld%n", qF5gQNIl3w, qF5gQNIl3w, w2_gh6RkNw);
+    printf("%n", mUErNzWesI, mUErNzWesI, w2_gh6RkNw, qF5gQNIl3w);
+}

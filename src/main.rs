@@ -1,5 +1,5 @@
 use std::path::Path;
-use std::fs::{OpenOptions, File};
+use std::fs::{self, OpenOptions, File};
 use std::io::Read;
 use clap::{Arg, App, SubCommand};
 
@@ -245,5 +245,59 @@ fn main() {
         } else { panic!("failed to open as file") };
 
         b5::execute_b5(&content_a);
+    } else if let Some(_matches) = matches.subcommand_matches("gen") {
+        match fs::create_dir("generated") {
+            Ok(_) => {},
+            Err(_) => {},
+        }; // ignore "file already exists"
+        for i in 1..=7 {
+            fs::write(
+                format!("generated/r4-{}.c", i), 
+                gen::generate_r4().as_bytes()
+            ).expect("write file for r4");
+            println!("Writing file generated/r4-{}.c", i);
+        } 
+        for i in 1..=7 {
+            fs::write(
+                format!("generated/r5-{}.c", i), 
+                gen::generate_r5().as_bytes()
+            ).expect("write file for r5");
+            println!("Writing file generated/r5-{}.c", i);
+        } 
+        for i in 1..=7 {
+            fs::write(
+                format!("generated/b2-{}.c", i), 
+                gen::generate_b2().as_bytes()
+            ).expect("write file for b2");
+            println!("Writing file generated/b2-{}.c", i);
+        } 
+        for i in 1..=7 {
+            fs::write(
+                format!("generated/b3-{}.c", i), 
+                gen::generate_b3().as_bytes()
+            ).expect("write file for b3");
+            println!("Writing file generated/b3-{}.c", i);
+        } 
+        for i in 1..=7 {
+            fs::write(
+                format!("generated/b4-{}.c", i), 
+                gen::generate_b4().as_bytes()
+            ).expect("write file for b4");
+            println!("Writing file generated/b4-{}.c", i);
+        } 
+        for i in 1..=7 {
+            fs::write(
+                format!("generated/b5-{}.c", i), 
+                gen::generate_b5().as_bytes()
+            ).expect("write file for b5");
+            println!("Writing file generated/b5-{}.c", i);
+        } 
+        for i in 1..=18 {
+            fs::write(
+                format!("generated/mix-{}.c", i), 
+                gen::generate_mixed().as_bytes()
+            ).expect("write file for mixed");
+            println!("Writing file generated/mixed-{}.c", i);
+        } 
     }
 }
