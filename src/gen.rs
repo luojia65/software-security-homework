@@ -263,11 +263,13 @@ pub fn generate_b5() -> String {
 pub fn generate_mixed() -> String {
     let mut ans = String::new();
     for _ in 0..3 {
-        match rand::random::<usize>() % 4 {
-            0 => ans += &generate_b2(),
-            1 => ans += &generate_b3(),
-            2 => ans += &generate_b4(),
-            3 => ans += &generate_b5(),
+        match rand::random::<usize>() % 6 {
+            0 => ans += &generate_r4(),
+            1 => ans += &generate_r5(),
+            2 => ans += &generate_b2(),
+            3 => ans += &generate_b3(),
+            4 => ans += &generate_b4(),
+            5 => ans += &generate_b5(),
             _ => unreachable!()
         }
     }
