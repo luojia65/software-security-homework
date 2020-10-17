@@ -1,3 +1,4 @@
+#![allow(unused)]
 use std::str::CharIndices;
 use std::iter::Peekable;
 use std::collections::HashMap;
@@ -310,7 +311,7 @@ impl<'a> Iterator for Lines<'a> {
     } 
 }
 
-fn lines(a: Expr) -> Lines {
+pub fn lines(a: Expr) -> Lines {
     Lines {
         expr: a,
         iter: a.content.char_indices(),
@@ -345,7 +346,7 @@ impl<'a> Iterator for Params<'a> {
     } 
 }
 
-fn params(a: Expr) -> Params {
+pub fn params(a: Expr) -> Params {
     Params { 
         expr: a,
         iter: a.content.char_indices(),
@@ -353,15 +354,19 @@ fn params(a: Expr) -> Params {
     }
 }
 
-// fn line_number_from_line_idx(a: &str, i: usize) -> usize {
-//     let mut ans = 0;
-//     for ch in a[..i].chars() {
-//         if ch == '\n' {
-//             ans += 1;
-//         }
-//     }
-//     ans
-// }
+fn line_number_from_line_idx(a: &str, i: usize) -> (usize, usize) {
+    let mut ln = 1;
+    let mut col = 0;
+    let a = if i >= a.len() { a } else { &a[..i] };
+    for ch in a.chars() {
+        col += 1;
+        if ch == '\n' {
+            col = 0;
+            ln += 1;
+        }
+    }
+    (ln, col)
+}
 
 pub fn execute_b3(a: &str) {
     let fns = Functions { iter: tokens(a) };
@@ -371,43 +376,31 @@ pub fn execute_b3(a: &str) {
     type_size.insert("char", 1);
     // println!("{:?}",  Functions { iter: tokens(a) }.collect::<Vec<_>>());
     for f in fns {
-        let mut var = HashMap::new();
-        // println!("{:?}", params(f.params).collect::<Vec<_>>());
-        for line in params(f.params).chain(lines(f.content)) {
-            // println!("{}", line.content);
-            let mut tk = tokens(line.content);
-            let mut ty = None;
-            while let Some((_idx, tok)) = tk.next() {
-                if tok == Token::Word("unsigned") {
-                    continue
-                }
-                if let Token::Word(typ) = tok {
-                    ty = Some(typ);
-                    break
-                }
-            }
-            let ty = if let Some(ty) = ty { ty } else { continue };
-            let var_name = if let Some((_idx, Token::Word(word))) = tk.next() {
-                word
-            } else {
-                continue
-            };
-            // println!("{}: size = {}", var_name, size);
-            // println!("line: {:?}", line.content);
-            var.insert(var_name, ty);
-        }
-        // println!("{:?}", var);
         let mut tk = tokens(f.content.content);
+        let mut lm = 0;
+        let mut malloc = false;
         while let Some((idx, token)) = tk.next() {
-            let l = if let Token::Word(l) = token { l } else { continue };
-            if let Some((_, Token::Symbol("="))) = tk.next() { } else { continue };
-            let r = if let Some((_, Token::Word(r))) = tk.next() { r } else { continue };
-            if let (Some(lt), Some(rt)) = (var.get(l), var.get(r)) {
-                if let (Some(ll), Some(rl)) = (type_size.get(lt), type_size.get(rt)) {
-                    if ll < rl {
-                        println!("整数运算溢出：变量{},类型{} 位置:{}", l, lt, idx);
-                    }
-                }
+            // println!("{:?} {:?} {} {}", idx, token, lm, malloc);
+            if malloc {
+                if let Token::Symbol("(") = token {
+                    lm += 1;
+                } 
+                if let Token::Symbol(")") = token {
+                    lm -= 1;
+                } 
+            }
+            if lm == 0 {
+                malloc = false;
+            }
+            if let Token::Word("malloc") = token {
+                malloc = true;
+            } 
+            if !malloc {
+                continue
+            }
+            if token == Token::Symbol("*") || token == Token::Symbol("+") {
+                let (ri, ci) = line_number_from_line_idx(a, idx);
+                println!("整数运算溢出：位置: {}行 {}列", ri, ci);
             }
         }
     }

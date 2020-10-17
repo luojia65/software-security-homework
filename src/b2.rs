@@ -353,15 +353,19 @@ fn params(a: Expr) -> Params {
     }
 }
 
-// fn line_number_from_line_idx(a: &str, i: usize) -> usize {
-//     let mut ans = 0;
-//     for ch in a[..i].chars() {
-//         if ch == '\n' {
-//             ans += 1;
-//         }
-//     }
-//     ans
-// }
+fn line_number_from_line_idx(a: &str, i: usize) -> (usize, usize) {
+    let mut ln = 1;
+    let mut col = 0;
+    let a = if i >= a.len() { a } else { &a[..i] };
+    for ch in a.chars() {
+        col += 1;
+        if ch == '\n' {
+            col = 0;
+            ln += 1;
+        }
+    }
+    (ln, col)
+}
 
 pub fn execute_b2(a: &str) {
     let fns = Functions { iter: tokens(a) };
@@ -405,7 +409,8 @@ pub fn execute_b2(a: &str) {
             if let (Some(lt), Some(rt)) = (var.get(l), var.get(r)) {
                 if let (Some(ll), Some(rl)) = (type_size.get(lt), type_size.get(rt)) {
                     if ll < rl {
-                        println!("整数长度溢出：左边变量{},类型{};右边变量{},类型:{}。位置:{}", l, lt, r, rt, idx);
+                        let (ri, ci) = line_number_from_line_idx(a, idx);
+                        println!("整数长度溢出：左边变量{},类型{};右边变量{},类型:{}。位置:{}行 {}列", l, lt, r, rt, ri,ci);
                     }
                 }
             }

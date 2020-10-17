@@ -1,4 +1,4 @@
-int main(int argc, char** argv) {
-    int* buf=(int*)malloc
-        (strlen(argv) * sizeof(int));
+void main(int argc) {
+    pMyBuf buf;
+    buf = (pMyBuf) malloc(strlen(argv) * sizeof(int) );
 }
